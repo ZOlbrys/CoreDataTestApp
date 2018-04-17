@@ -175,56 +175,57 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
 
 #pragma mark NSFetchedResultsControllerDelegate
 
-//- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-//        self.collectionViewChanges = [[NSMutableArray alloc] init];
-//}
-//
-//- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
-//
-//    switch (type) {
-//        case NSFetchedResultsChangeInsert: {
-//            [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[newIndexPath]]];
-//            break;
-//        }
-//
-//        case NSFetchedResultsChangeDelete: {
-//            [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[indexPath]]];
-//            break;
-//        }
-//
-//        case NSFetchedResultsChangeUpdate: {
-//            [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[indexPath]]];
-//            break;
-//        }
-//
-//        case NSFetchedResultsChangeMove: {
-//            [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[indexPath, newIndexPath]]];
-//            break;
-//        }
-//
-//        default:
-//            break;
-//    }
-//}
-//
-//- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-//    [self.collectionView performBatchUpdates:^{
-//        for (CollectionViewChange *collectionViewChange in self.collectionViewChanges) {
-//            switch (collectionViewChange.changeType) {
-//                case NSFetchedResultsChangeInsert:
-//                    [self.collectionView insertItemsAtIndexPaths:collectionViewChange.indexPaths];
-//                    break;
-//
-//                case NSFetchedResultsChangeDelete:
-//                    [self.collectionView deleteItemsAtIndexPaths:collectionViewChange.indexPaths];
-//                    break;
-//
-//                default:
-//                    break;
-//            }
-//        }
-//    } completion:nil];
-//}
+// TODO comment out these methods to see how quick adding/removing objects is!
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+        self.collectionViewChanges = [[NSMutableArray alloc] init];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+
+    switch (type) {
+        case NSFetchedResultsChangeInsert: {
+            [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[newIndexPath]]];
+            break;
+        }
+
+        case NSFetchedResultsChangeDelete: {
+            [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[indexPath]]];
+            break;
+        }
+
+        case NSFetchedResultsChangeUpdate: {
+            [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[indexPath]]];
+            break;
+        }
+
+        case NSFetchedResultsChangeMove: {
+            [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[indexPath, newIndexPath]]];
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    [self.collectionView performBatchUpdates:^{
+        for (CollectionViewChange *collectionViewChange in self.collectionViewChanges) {
+            switch (collectionViewChange.changeType) {
+                case NSFetchedResultsChangeInsert:
+                    [self.collectionView insertItemsAtIndexPaths:collectionViewChange.indexPaths];
+                    break;
+
+                case NSFetchedResultsChangeDelete:
+                    [self.collectionView deleteItemsAtIndexPaths:collectionViewChange.indexPaths];
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    } completion:nil];
+}
 
 @end
 
