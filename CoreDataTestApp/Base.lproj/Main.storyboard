@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" systemVersion="17A277" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Baseline standard spacing" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -9,13 +15,102 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XTH-xA-1XM">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem title="+10k" id="fG9-9i-aoP">
+                                        <connections>
+                                            <action selector="add10k:" destination="BYZ-38-t0r" id="Bv0-Hw-eBR"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="LUq-PR-REy"/>
+                                    <barButtonItem title="+1" id="OLx-wv-DUn">
+                                        <connections>
+                                            <action selector="add1:" destination="BYZ-38-t0r" id="CXK-CF-FO8"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="iwO-8x-hc1"/>
+                                    <barButtonItem title="Refetch" id="lgp-wZ-4D5">
+                                        <connections>
+                                            <action selector="refetchData:" destination="BYZ-38-t0r" id="TmS-Fr-u0z"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Qb9-99-8Lg"/>
+                                    <barButtonItem title="Reset" id="Q2q-dj-GCG">
+                                        <connections>
+                                            <action selector="resetData:" destination="BYZ-38-t0r" id="Gog-Pw-D7x"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="5zI-ES-xUG"/>
+                                    <barButtonItem title="-1" id="Zk4-ZF-8MN">
+                                        <connections>
+                                            <action selector="remove1:" destination="BYZ-38-t0r" id="ji2-pR-eME"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="oGY-Wi-yDM"/>
+                                    <barButtonItem title="-10k" id="5lZ-xm-v6V">
+                                        <connections>
+                                            <action selector="remove10k:" destination="BYZ-38-t0r" id="wLX-wX-idh"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6yn-2p-mUE">
+                                <rect key="frame" x="0.0" y="20" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Aoy-WL-Gob">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CUSTOM_CELL_REUSE_IDENTIFIER" id="vgw-gU-nEN" userLabel="Custom Cell" customClass="CustomCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H5S-uT-Fxm">
+                                                    <rect key="frame" x="4" y="14.5" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="H5S-uT-Fxm" firstAttribute="centerY" secondItem="vgw-gU-nEN" secondAttribute="centerY" id="nVz-tx-0H7"/>
+                                            <constraint firstItem="H5S-uT-Fxm" firstAttribute="centerX" secondItem="vgw-gU-nEN" secondAttribute="centerX" id="rIl-D0-xbn"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="label" destination="H5S-uT-Fxm" id="8Vy-ff-Vzw"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6yn-2p-mUE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="4zV-EG-f6A"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="6yn-2p-mUE" secondAttribute="trailing" id="8ze-KR-9Fi"/>
+                            <constraint firstItem="XTH-xA-1XM" firstAttribute="firstBaseline" secondItem="6yn-2p-mUE" secondAttribute="baseline" symbolType="layoutAnchor" id="KMl-MO-PLp"/>
+                            <constraint firstItem="6yn-2p-mUE" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Pp0-3g-9JJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XTH-xA-1XM" secondAttribute="bottom" id="jUm-9A-02z"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XTH-xA-1XM" secondAttribute="trailing" id="v17-yw-1b0"/>
+                            <constraint firstItem="XTH-xA-1XM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="yP4-cs-TGe"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="collectionView" destination="6yn-2p-mUE" id="c8N-Cx-MDe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

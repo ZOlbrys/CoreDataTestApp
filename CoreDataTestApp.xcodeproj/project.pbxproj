@@ -13,6 +13,12 @@
 		D18EB9A92085A2DE0005A7C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D18EB9A82085A2DE0005A7C3 /* Assets.xcassets */; };
 		D18EB9AC2085A2DE0005A7C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D18EB9AA2085A2DE0005A7C3 /* LaunchScreen.storyboard */; };
 		D18EB9AF2085A2DE0005A7C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D18EB9AE2085A2DE0005A7C3 /* main.m */; };
+		D18EB9BF2085A4A10005A7C3 /* CustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D18EB9BE2085A4A10005A7C3 /* CustomCell.m */; };
+		D18EB9C22085A4DB0005A7C3 /* CoreDataTestApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D18EB9C02085A4DB0005A7C3 /* CoreDataTestApp.xcdatamodeld */; };
+		D18EB9CB2085A5AC0005A7C3 /* CustomObject+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = D18EB9C92085A5AC0005A7C3 /* CustomObject+CoreDataClass.m */; };
+		D18EB9CC2085A5AC0005A7C3 /* CustomObject+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = D18EB9CA2085A5AC0005A7C3 /* CustomObject+CoreDataProperties.m */; };
+		D18EB9CF2085A5D00005A7C3 /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D18EB9CE2085A5D00005A7C3 /* CoreDataController.m */; };
+		D18EB9D22085A6350005A7C3 /* CollectionViewChange.m in Sources */ = {isa = PBXBuildFile; fileRef = D18EB9D12085A6350005A7C3 /* CollectionViewChange.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +32,17 @@
 		D18EB9AB2085A2DE0005A7C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D18EB9AD2085A2DE0005A7C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D18EB9AE2085A2DE0005A7C3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D18EB9BD2085A4A10005A7C3 /* CustomCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomCell.h; sourceTree = "<group>"; };
+		D18EB9BE2085A4A10005A7C3 /* CustomCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomCell.m; sourceTree = "<group>"; };
+		D18EB9C12085A4DB0005A7C3 /* CoreDataTestApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataTestApp.xcdatamodel; sourceTree = "<group>"; };
+		D18EB9C72085A5AC0005A7C3 /* CustomObject+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CustomObject+CoreDataProperties.h"; sourceTree = "<group>"; };
+		D18EB9C82085A5AC0005A7C3 /* CustomObject+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CustomObject+CoreDataClass.h"; sourceTree = "<group>"; };
+		D18EB9C92085A5AC0005A7C3 /* CustomObject+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CustomObject+CoreDataClass.m"; sourceTree = "<group>"; };
+		D18EB9CA2085A5AC0005A7C3 /* CustomObject+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CustomObject+CoreDataProperties.m"; sourceTree = "<group>"; };
+		D18EB9CD2085A5D00005A7C3 /* CoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreDataController.h; sourceTree = "<group>"; };
+		D18EB9CE2085A5D00005A7C3 /* CoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreDataController.m; sourceTree = "<group>"; };
+		D18EB9D02085A6350005A7C3 /* CollectionViewChange.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewChange.h; sourceTree = "<group>"; };
+		D18EB9D12085A6350005A7C3 /* CollectionViewChange.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewChange.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,10 +75,14 @@
 		D18EB99E2085A2DE0005A7C3 /* CoreDataTestApp */ = {
 			isa = PBXGroup;
 			children = (
+				D18EB9BC2085A4900005A7C3 /* View */,
+				D18EB9BB2085A43C0005A7C3 /* Core Data */,
 				D18EB99F2085A2DE0005A7C3 /* AppDelegate.h */,
 				D18EB9A02085A2DE0005A7C3 /* AppDelegate.m */,
 				D18EB9A22085A2DE0005A7C3 /* ViewController.h */,
 				D18EB9A32085A2DE0005A7C3 /* ViewController.m */,
+				D18EB9D02085A6350005A7C3 /* CollectionViewChange.h */,
+				D18EB9D12085A6350005A7C3 /* CollectionViewChange.m */,
 				D18EB9A52085A2DE0005A7C3 /* Main.storyboard */,
 				D18EB9A82085A2DE0005A7C3 /* Assets.xcassets */,
 				D18EB9AA2085A2DE0005A7C3 /* LaunchScreen.storyboard */,
@@ -69,6 +90,29 @@
 				D18EB9AE2085A2DE0005A7C3 /* main.m */,
 			);
 			path = CoreDataTestApp;
+			sourceTree = "<group>";
+		};
+		D18EB9BB2085A43C0005A7C3 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				D18EB9C02085A4DB0005A7C3 /* CoreDataTestApp.xcdatamodeld */,
+				D18EB9CD2085A5D00005A7C3 /* CoreDataController.h */,
+				D18EB9CE2085A5D00005A7C3 /* CoreDataController.m */,
+				D18EB9C72085A5AC0005A7C3 /* CustomObject+CoreDataProperties.h */,
+				D18EB9C82085A5AC0005A7C3 /* CustomObject+CoreDataClass.h */,
+				D18EB9C92085A5AC0005A7C3 /* CustomObject+CoreDataClass.m */,
+				D18EB9CA2085A5AC0005A7C3 /* CustomObject+CoreDataProperties.m */,
+			);
+			path = "Core Data";
+			sourceTree = "<group>";
+		};
+		D18EB9BC2085A4900005A7C3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D18EB9BD2085A4A10005A7C3 /* CustomCell.h */,
+				D18EB9BE2085A4A10005A7C3 /* CustomCell.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,7 +187,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D18EB9A42085A2DE0005A7C3 /* ViewController.m in Sources */,
+				D18EB9D22085A6350005A7C3 /* CollectionViewChange.m in Sources */,
+				D18EB9CB2085A5AC0005A7C3 /* CustomObject+CoreDataClass.m in Sources */,
 				D18EB9AF2085A2DE0005A7C3 /* main.m in Sources */,
+				D18EB9BF2085A4A10005A7C3 /* CustomCell.m in Sources */,
+				D18EB9C22085A4DB0005A7C3 /* CoreDataTestApp.xcdatamodeld in Sources */,
+				D18EB9CC2085A5AC0005A7C3 /* CustomObject+CoreDataProperties.m in Sources */,
+				D18EB9CF2085A5D00005A7C3 /* CoreDataController.m in Sources */,
 				D18EB9A12085A2DE0005A7C3 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -218,7 +268,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -267,7 +317,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -324,6 +374,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D18EB9C02085A4DB0005A7C3 /* CoreDataTestApp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D18EB9C12085A4DB0005A7C3 /* CoreDataTestApp.xcdatamodel */,
+			);
+			currentVersion = D18EB9C12085A4DB0005A7C3 /* CoreDataTestApp.xcdatamodel */;
+			path = CoreDataTestApp.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D18EB9942085A2DE0005A7C3 /* Project object */;
 }
