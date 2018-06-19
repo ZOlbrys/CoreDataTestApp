@@ -52,10 +52,6 @@
     return self;
 }
 
-- (void)dealloc {
-    //    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)setupCoreDataStack {
     // setup managed object model
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:self.managedObjectModelURL];
@@ -67,42 +63,9 @@
     // create MOC
     _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
     [_managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
-    
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextDidSave:) name:NSManagedObjectContextDidSaveNotification object:nil];
-}
-
-- (void)contextDidSave:(NSNotification *)notification {
-    //    // ignore change notifications for the main MOC
-    //    NSManagedObjectContext *savedContext = [notification object];
-    //    if (self.managedObjectContext == savedContext) return;
-    //
-    //    // ignore changes from any other database
-    //    if (self.managedObjectContext.persistentStoreCoordinator != savedContext.persistentStoreCoordinator) return;
-    //
-    //    NSTimeInterval mainMOCSaveStartTime = [[NSDate date] timeIntervalSince1970];
-    //
-    //    // Else merge in the changes
-    //    [self.managedObjectContext performBlockAndWait:^{
-    //        @try {
-    //            // Fault in all updated objects
-    //            NSMutableArray *newObjectIDs = [[[notification.userInfo objectForKey:@"updated"] allObjects] valueForKey:@"objectID"];
-    //            for (NSManagedObjectID *oid in newObjectIDs) {
-    //                [[self.managedObjectContext objectWithID:oid] willAccessValueForKey:nil];
-    //            }
-    //
-    //            [self.managedObjectContext mergeChangesFromContextDidSaveNotification:notification];
-    //            NSTimeInterval mainMOCSaveEndTime = [[NSDate date] timeIntervalSince1970];
-    //            NSTimeInterval mainMOCSaveTime = mainMOCSaveEndTime - mainMOCSaveStartTime;
-    //            NSLog(@"ZAO TRACE took %f seconds to save to main MOC", mainMOCSaveTime);
-    //        } @catch (NSException *exception) {
-    //            NSLog(@"Managed Object Context merge errored out with the following exception: %@", exception);
-    //        } @finally {}
-    //    }];
 }
 
 - (void)reset {
-    //    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:nil];
-    
     // Delete persistent stores
     [self deletePersistentStores];
     
