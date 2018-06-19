@@ -170,8 +170,6 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
     
     [cell setDisplayText:object.identifier];
     
-    cell.backgroundColor = [UIColor blueColor];
-    
     return cell;
 }
 
