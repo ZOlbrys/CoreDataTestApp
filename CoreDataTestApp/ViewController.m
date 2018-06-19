@@ -20,6 +20,8 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
 @property (strong, nonatomic) NSMutableArray<CollectionViewChange *> *collectionViewChanges;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 
+@property (assign, nonatomic) NSTimeInterval controllerWillChangeContentCalledTime;
+
 @end
 
 @implementation ViewController
@@ -51,8 +53,7 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
     
     [self.collectionView reloadData];
     
-    NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval fetchTime = endTime - startTime;
+    NSTimeInterval fetchTime = [[NSDate date] timeIntervalSince1970] - startTime;
     NSLog(@"ZAO fetch and reloadData complete, took %f sec to fetch %lu object(s)", fetchTime, (unsigned long)self.fetchedResultsController.fetchedObjects.count);
     NSLog(@"*****");
 }
@@ -152,8 +153,7 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
     
     [self.collectionView reloadData];
     
-    NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval fetchTime = endTime - startTime;
+    NSTimeInterval fetchTime = [[NSDate date] timeIntervalSince1970] - startTime;
     NSLog(@"ZAO refetch and reloadData complete, took %f sec to fetch %lu object(s)", fetchTime, (unsigned long)self.fetchedResultsController.fetchedObjects.count);
     NSLog(@"*****");
 }
@@ -194,11 +194,13 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
 
 // TODO comment out these methods to see how quick adding/removing objects is!
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-        self.collectionViewChanges = [[NSMutableArray alloc] init];
+    self.controllerWillChangeContentCalledTime = [[NSDate date] timeIntervalSince1970];
+    NSLog(@"ZAO controllerWillChangeContent called");
+    
+    self.collectionViewChanges = [[NSMutableArray alloc] init];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
-
     switch (type) {
         case NSFetchedResultsChangeInsert: {
             [self.collectionViewChanges addObject:[[CollectionViewChange alloc] initWithChangeType:type indexPaths:@[newIndexPath]]];
@@ -226,6 +228,9 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    NSTimeInterval delegateMethodTimeDifference = [[NSDate date] timeIntervalSince1970] - self.controllerWillChangeContentCalledTime;
+    NSLog(@"ZAO controllerDidChangeContent called, %f sec since controllerWillChangeContent was called", delegateMethodTimeDifference);
+    
     [self.collectionView performBatchUpdates:^{
         for (CollectionViewChange *collectionViewChange in self.collectionViewChanges) {
             switch (collectionViewChange.changeType) {
