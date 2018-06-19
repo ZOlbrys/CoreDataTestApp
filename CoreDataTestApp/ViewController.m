@@ -41,9 +41,20 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
     
     self.fetchedResultsController.delegate = self;
     
-    [self.fetchedResultsController performFetch:nil];
+    NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
+    
+    NSError *error;
+    [self.fetchedResultsController performFetch:&error];
+    if (error) {
+        NSLog(@"ZAO error during setupFetchedResultsController fetch: %@", error);
+    }
     
     [self.collectionView reloadData];
+    
+    NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval fetchTime = endTime - startTime;
+    NSLog(@"ZAO fetch and reloadData complete, took %f sec to fetch %lu object(s)", fetchTime, (unsigned long)self.fetchedResultsController.fetchedObjects.count);
+    NSLog(@"*****");
 }
 
 - (void)addObjects:(NSUInteger)objectCount {
@@ -58,41 +69,18 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
             object.identifier = [[NSUUID UUID] UUIDString];
         }
         
-        NSTimeInterval objectsCreatedEndTime = [[NSDate date] timeIntervalSince1970];
-        NSTimeInterval objectsCreatedTime = objectsCreatedEndTime - startTime;
-        NSLog(@"ZAO TRACE took %f seconds to add %lu object(s)", objectsCreatedTime, (unsigned long)objectCount);
+        NSTimeInterval addObjectsTime = [[NSDate date] timeIntervalSince1970] - startTime;
+        NSLog(@"ZAO insert %lu object(s) complete, took %f sec", (unsigned long)objectCount, addObjectsTime);
         
-        NSTimeInterval tempMOCSaveStartTime = [[NSDate date] timeIntervalSince1970];
-        
-        NSError *error;
-        if (![temporaryContext save:&error]) {
-            NSLog(@"Error: %@", error);
-        }
-        
-        NSTimeInterval tempMOCSaveEndTime = [[NSDate date] timeIntervalSince1970];
-        NSTimeInterval tempMOCSaveTime = tempMOCSaveEndTime - tempMOCSaveStartTime;
-        NSTimeInterval totalTimeSoFar = tempMOCSaveEndTime - startTime;
-        NSLog(@"ZAO TRACE took %f seconds to save %lu object(s) to temp MOC - %f seconds on background thread", totalTimeSoFar, (unsigned long)objectCount, tempMOCSaveTime);
-        
-        [[CoreDataController sharedController].managedObjectContext performBlock:^{
-            NSTimeInterval mainMOCSaveStartTime = [[NSDate date] timeIntervalSince1970];
-            
-            NSError *error;
-            if (![[CoreDataController sharedController].managedObjectContext save:&error]) {
-                NSLog(@"Error: %@", error);
-            }
-            
-            NSTimeInterval mainMOCSaveEndTime = [[NSDate date] timeIntervalSince1970];
-            NSTimeInterval mainMOCSaveTime = mainMOCSaveEndTime - mainMOCSaveStartTime;
-            NSTimeInterval totalTimeSoFar = mainMOCSaveEndTime - startTime;
-            NSLog(@"ZAO TRACE took %f seconds to save %lu object(s) to main MOC - %f seconds on main thread", totalTimeSoFar, (unsigned long)objectCount, mainMOCSaveTime);
-        }];
+        [self saveTempMoc:temporaryContext];
     }];
 }
 
 - (void)removeObjects:(NSUInteger)objectCount {
     NSManagedObjectContext *temporaryContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     temporaryContext.parentContext = [CoreDataController sharedController].managedObjectContext;
+    
+    NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
     
     [temporaryContext performBlock:^{
         NSFetchRequest<CustomObject *> *fetchRequest = [CustomObject fetchRequest];
@@ -101,23 +89,20 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
         
         NSFetchedResultsController<CustomObject *> *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:temporaryContext sectionNameKeyPath:nil cacheName:nil];
         
-        [fetchedResultsController performFetch:nil];
+        NSError *error;
+        [fetchedResultsController performFetch:&error];
+        if (error) {
+            NSLog(@"ZAO error during removeObjects fetch: %@", error);
+        }
         
         for (CustomObject *object in fetchedResultsController.fetchedObjects) {
             [temporaryContext deleteObject:object];
         }
         
-        NSError *error;
-        if (![temporaryContext save:&error]) {
-            NSLog(@"Error: %@", error);
-        }
+        NSTimeInterval removeObjectsTime = [[NSDate date] timeIntervalSince1970] - startTime;
+        NSLog(@"ZAO remove %lu object(s) complete, took %f sec", (unsigned long)objectCount, removeObjectsTime);
         
-        [[CoreDataController sharedController].managedObjectContext performBlock:^{
-            NSError *error;
-            if (![[CoreDataController sharedController].managedObjectContext save:&error]) {
-                NSLog(@"Error: %@", error);
-            }
-        }];
+        [self saveTempMoc:temporaryContext];
     }];
 }
 
@@ -129,16 +114,48 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
     [self addObjects:1];
 }
 
+- (void)saveTempMoc:(NSManagedObjectContext *)temporaryContext {
+    NSTimeInterval tempMOCSaveStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    NSError *error;
+    if (![temporaryContext save:&error]) {
+        NSLog(@"ZAO error saving temp context: %@", error);
+    }
+    
+    NSTimeInterval tempMOCSaveTime = [[NSDate date] timeIntervalSince1970] - tempMOCSaveStartTime;
+    
+    NSLog(@"ZAO temp MOC save complete, took %f sec", tempMOCSaveTime);
+    
+    [[CoreDataController sharedController].managedObjectContext performBlock:^{
+        NSTimeInterval mainMOCSaveStartTime = [[NSDate date] timeIntervalSince1970];
+        
+        NSError *error;
+        if (![[CoreDataController sharedController].managedObjectContext save:&error]) {
+            NSLog(@"ZAO error saving main context: %@", error);
+        }
+        
+        NSTimeInterval mainMOCSaveTime = [[NSDate date] timeIntervalSince1970] - mainMOCSaveStartTime;
+        
+        NSLog(@"ZAO main MOC save complete, took %f sec", mainMOCSaveTime);
+        NSLog(@"*****");
+    }];
+}
+
 - (IBAction)refetchData:(id)sender {
     NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
     
-    [self.fetchedResultsController performFetch:nil];
+    NSError *error;
+    [self.fetchedResultsController performFetch:&error];
+    if (error) {
+        NSLog(@"ZAO error during refetchData fetch: %@", error);
+    }
+    
+    [self.collectionView reloadData];
     
     NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval fetchTime = endTime - startTime;
-    NSLog(@"ZAO TRACE took %f seconds to fetch %lu object(s)", fetchTime, (unsigned long)self.fetchedResultsController.fetchedObjects.count);
-    
-    [self.collectionView reloadData];
+    NSLog(@"ZAO refetch and reloadData complete, took %f sec to fetch %lu object(s)", fetchTime, (unsigned long)self.fetchedResultsController.fetchedObjects.count);
+    NSLog(@"*****");
 }
 
 - (IBAction)resetData:(id)sender {
