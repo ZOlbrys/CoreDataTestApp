@@ -166,7 +166,9 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     CustomCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:CUSTOM_CELL_REUSE_IDENTIFIER forIndexPath:indexPath];
     
-    [cell setDisplayText:@"TODO"];
+    CustomObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    [cell setDisplayText:object.identifier];
     
     cell.backgroundColor = [UIColor blueColor];
     
