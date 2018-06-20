@@ -39,7 +39,7 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
     NSFetchRequest<CustomObject *> *fetchRequest = [CustomObject fetchRequest];
     fetchRequest.sortDescriptors = @[ [[NSSortDescriptor alloc] initWithKey:@"identifier" ascending:YES] ];
     
-    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:[CoreDataController sharedController].managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:[CoreDataController sharedController].mainManagedObjectContext sectionNameKeyPath:nil cacheName:nil];
     
     self.fetchedResultsController.delegate = self;
     
@@ -59,36 +59,34 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
 }
 
 - (void)addObjects:(NSUInteger)objectCount {
-    NSManagedObjectContext *temporaryContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    temporaryContext.parentContext = [CoreDataController sharedController].managedObjectContext;
-    
     NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
     
-    [temporaryContext performBlock:^{
+    [[CoreDataController sharedController].privateManagedObjectContext performBlock:^{
         for (int i = 0; i < objectCount; i++) {
-            CustomObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"CustomObject" inManagedObjectContext:temporaryContext];
+            CustomObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"CustomObject" inManagedObjectContext:[CoreDataController sharedController].privateManagedObjectContext];
             object.identifier = [[NSUUID UUID] UUIDString];
         }
         
         NSTimeInterval addObjectsTime = [[NSDate date] timeIntervalSince1970] - startTime;
         NSLog(@"ZAO insert %lu object(s) complete, took %f sec", (unsigned long)objectCount, addObjectsTime);
         
-        [self saveTempMoc:temporaryContext];
+        NSError *error;
+        [[CoreDataController sharedController].privateManagedObjectContext save:&error];
+        if (error) {
+            NSLog(@"ZAO error during addObjects save: %@", error);
+        }
     }];
 }
 
 - (void)removeObjects:(NSUInteger)objectCount {
-    NSManagedObjectContext *temporaryContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    temporaryContext.parentContext = [CoreDataController sharedController].managedObjectContext;
-    
     NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
     
-    [temporaryContext performBlock:^{
+    [[CoreDataController sharedController].privateManagedObjectContext performBlock:^{
         NSFetchRequest<CustomObject *> *fetchRequest = [CustomObject fetchRequest];
         fetchRequest.sortDescriptors = @[ [[NSSortDescriptor alloc] initWithKey:@"identifier" ascending:YES] ];
         fetchRequest.fetchLimit = objectCount;
         
-        NSFetchedResultsController<CustomObject *> *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:temporaryContext sectionNameKeyPath:nil cacheName:nil];
+        NSFetchedResultsController<CustomObject *> *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:[CoreDataController sharedController].privateManagedObjectContext sectionNameKeyPath:nil cacheName:nil];
         
         NSError *error;
         [fetchedResultsController performFetch:&error];
@@ -97,13 +95,17 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
         }
         
         for (CustomObject *object in fetchedResultsController.fetchedObjects) {
-            [temporaryContext deleteObject:object];
+            [[CoreDataController sharedController].privateManagedObjectContext deleteObject:object];
         }
         
         NSTimeInterval removeObjectsTime = [[NSDate date] timeIntervalSince1970] - startTime;
         NSLog(@"ZAO remove %lu object(s) complete, took %f sec", (unsigned long)objectCount, removeObjectsTime);
         
-        [self saveTempMoc:temporaryContext];
+        NSError *saveError;
+        [[CoreDataController sharedController].privateManagedObjectContext save:&saveError];
+        if (saveError) {
+            NSLog(@"ZAO error during removeObjects save: %@", error);
+        }
     }];
 }
 
@@ -113,33 +115,6 @@ static NSString *const CUSTOM_CELL_REUSE_IDENTIFIER = @"CUSTOM_CELL_REUSE_IDENTI
 
 - (IBAction)add1:(id)sender {
     [self addObjects:1];
-}
-
-- (void)saveTempMoc:(NSManagedObjectContext *)temporaryContext {
-    NSTimeInterval tempMOCSaveStartTime = [[NSDate date] timeIntervalSince1970];
-    
-    NSError *error;
-    if (![temporaryContext save:&error]) {
-        NSLog(@"ZAO error saving temp context: %@", error);
-    }
-    
-    NSTimeInterval tempMOCSaveTime = [[NSDate date] timeIntervalSince1970] - tempMOCSaveStartTime;
-    
-    NSLog(@"ZAO temp MOC save complete, took %f sec", tempMOCSaveTime);
-    
-    [[CoreDataController sharedController].managedObjectContext performBlock:^{
-        NSTimeInterval mainMOCSaveStartTime = [[NSDate date] timeIntervalSince1970];
-        
-        NSError *error;
-        if (![[CoreDataController sharedController].managedObjectContext save:&error]) {
-            NSLog(@"ZAO error saving main context: %@", error);
-        }
-        
-        NSTimeInterval mainMOCSaveTime = [[NSDate date] timeIntervalSince1970] - mainMOCSaveStartTime;
-        
-        NSLog(@"ZAO main MOC save complete, took %f sec", mainMOCSaveTime);
-        NSLog(@"*****");
-    }];
 }
 
 - (IBAction)refetchData:(id)sender {
