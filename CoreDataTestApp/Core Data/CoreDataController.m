@@ -16,7 +16,8 @@
 
 @property (nonatomic, strong, readwrite) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, strong, readwrite) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong, readwrite) NSManagedObjectContext *mainManagedObjectContext;
+@property (nonatomic, strong, readwrite) NSManagedObjectContext *privateManagedObjectContext;
 
 @end
 
@@ -60,9 +61,25 @@
     self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
     [self.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:self.persistentStoreURL options:nil error:nil];
     
-    // create MOC
-    self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-    [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    // create MOCs
+    self.mainManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    self.privateManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    
+    [self.mainManagedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    [self.privateManagedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification* note) {
+                                                      NSManagedObjectContext *moc = self.mainManagedObjectContext;
+                                                      
+                                                      if (note.object != moc) {
+                                                          [moc performBlock:^(){
+                                                              [moc mergeChangesFromContextDidSaveNotification:note];
+                                                          }];
+                                                      }
+                                                  }];
 }
 
 - (void)reset {
@@ -71,7 +88,8 @@
     
     self.persistentStoreCoordinator = nil;
     self.managedObjectModel = nil;
-    self.managedObjectContext = nil;
+    self.mainManagedObjectContext = nil;
+    self.privateManagedObjectContext = nil;
     
     // Re-create MOC stack
     [self setupCoreDataStack];
