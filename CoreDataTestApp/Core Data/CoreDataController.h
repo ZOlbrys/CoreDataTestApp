@@ -13,8 +13,7 @@
 
 @interface CoreDataController : NSObject
 
-@property (nonatomic, strong, readonly) NSManagedObjectContext *mainManagedObjectContext;
-@property (nonatomic, strong, readonly) NSManagedObjectContext *privateManagedObjectContext;
+@property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
 
 + (CoreDataController *)sharedController;
 
